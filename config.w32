@@ -1,0 +1,4 @@
+if (PHP_CLASS_LOADER != "no") {
+	EXTENSION("class_loader", "class_loader.c", PHP_EXTNAME_SHARED, "/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1");
+}
+
