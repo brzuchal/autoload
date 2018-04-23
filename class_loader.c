@@ -86,13 +86,13 @@ ZEND_METHOD(Psr4Loader, getPrefixes)
     zval *object = getThis();
     cl_obj *intern;
     zend_string *prefix;
-    zval *paths;
+    zval *path;
 
     array_init(return_value);
     intern = Z_CLOBJECT_P(object);
     if (intern->prefixes) {
-        ZEND_HASH_FOREACH_STR_KEY_PTR(intern->prefixes, prefix, paths) {
-            add_assoc_zval_ex(return_value, ZSTR_VAL(prefix), ZSTR_LEN(prefix), paths);
+        ZEND_HASH_FOREACH_STR_KEY_PTR(intern->prefixes, prefix, path) {
+            add_assoc_zval_ex(return_value, ZSTR_VAL(prefix), ZSTR_LEN(prefix), path);
         } ZEND_HASH_FOREACH_END();
     }
 }
