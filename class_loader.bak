@@ -1,0 +1,359 @@
+/*
+/+----------------------------------------------------------------------+
+ | PHP CLI ClassLoader                                                  |
+ +----------------------------------------------------------------------+
+ | Copyright (c) 2016 Michał Brzuchalski                                |
+ +----------------------------------------------------------------------+
+ | This source file is subject to version 3.01 of the PHP license,      |
+ | that is bundled with this package in the file LICENSE, and is        |
+ | available through the world-wide-web at the following url:           |
+ | http://www.php.net/license/3_01.txt.                                 |
+ | If you did not receive a copy of the PHP license and are unable to   |
+ | obtain it through the world-wide-web, please send a note to          |
+ | license@php.net so we can mail you a copy immediately.               |
+ +----------------------------------------------------------------------+
+ | Author: Michał Brzuchalski <michal.brzuchalski@gmail.com>            |
+ +----------------------------------------------------------------------+
+*/
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include "php.h"
+#include "main/php_ini.h"
+#include "class_loader.h"
+#include "Zend/zend_objects_API.h"
+
+// #include "php_main.h"
+// #include "php_globals.h"
+// #include "ext/standard/info.h"
+// #include "ext/standard/php_versioning.h"
+// #include "ext/standard/php_math.h"
+// #include "zend_interfaces.h"
+
+
+typedef struct _cl_obj cl_obj;
+struct _cl_obj {
+	HashTable    *prefixes;
+	zend_object   std;
+};
+
+// zend_object_handlers cl_object_handlers; 
+
+static inline cl_obj *cl_obj_from_obj(zend_object *obj) {
+	return (cl_obj*)((char*)(obj) - XtOffsetOf(cl_obj, std));
+}
+
+#define Z_CLOBJECT_P(zv)  cl_obj_from_obj(Z_OBJ_P((zv)))
+
+static zend_object *cl_object_new(zend_class_entry *class_type) /* {{{ */
+{
+// printf("\e[0;33mLine 51...\e[0m\n");
+    cl_obj *intern = ecalloc(1, sizeof(cl_obj) + zend_object_properties_size(class_type));
+	// cl_obj *intern = zend_object_alloc(sizeof(cl_obj), class_type);
+// printf("\e[0;33mLine 54...\e[0m\n");
+	zend_object_std_init(&intern->std, class_type);
+	object_properties_init(&intern->std, class_type);
+	// intern->std.handlers = &date_object_handlers_date;
+// printf("\e[0;33mLine 58...\e[0m\n");
+	return &intern->std;
+} /* }}} */
+
+static zend_object_handlers cl_object_handlers;
+
+// typedef struct _class_loader_object {
+// 	HashTable   *prefixes;
+// 	zend_object std;
+// } class_loader_object;
+
+// static inline class_loader_object *class_loader_from_obj(zend_object *obj) /* {{{ */ {
+// 	return (class_loader_object*)((char*)(obj) - XtOffsetOf(class_loader_object, std));
+// }
+
+// #define Z_CLOBJECT_P(zv) class_loader_from_obj(Z_OBJ_P((zv)))
+
+// /* {{{ class_loader_object_new_ex */
+// static zend_object *class_loader_object_new_ex(zend_class_entry *class_type, zval *orig, int clone_orig)
+// {
+// 	class_loader_object *intern;
+// 	zend_class_entry *parent = class_type;
+
+// 	intern = zend_object_alloc(sizeof(class_loader_object), parent);
+
+// 	zend_object_std_init(&intern->std, class_type);
+// 	object_properties_init(&intern->std, class_type);
+
+//     // class_loader_object *other = Z_CLOBJECT_P(orig);
+//     // array_init(&intern->array);
+	
+// 	return &intern->std;
+// }
+// /* }}} */
+
+// /* {{{ class_loader_object_new */
+// static zend_object *class_loader_object_new(zend_class_entry *class_type)
+// {
+// 	return class_loader_object_new_ex(class_type, NULL, 0);
+// }
+// /* }}} */
+
+// ZEND_DECLARE_MODULE_GLOBALS(class_loader);
+
+// static inline void php_class_loader_init_globals(zend_class_loader_globals *dsg) {
+// 	memset(dsg, 0, sizeof(zend_class_loader_globals));
+// }
+
+
+/* {{{ proto void ClassLoader::loadClass() : string
+   Retrieve the parameter name */
+// ZEND_METHOD(ClassLoader, loadClass)
+// {
+// }
+/* }}} */
+
+/* {{{ proto void Psr4Loader::__construct()
+   Argument constructor */
+ZEND_METHOD(Psr4Loader, __construct)
+{
+printf("\e[0;33mLine 118...\e[0m\n");    
+	zval *object = getThis();
+	cl_obj *intern;
+printf("\e[0;33mLine 120...\e[0m\n");
+	intern = Z_CLOBJECT_P(object);
+    intern->std.handlers = &cl_object_handlers;
+
+
+    // // zval prefixes;
+    // // Z_ADDREF_P(&prefixes);
+    // // HashTable *prefixes_arr = NULL;
+    // // Z_ARRVAL_P() = prefixes;
+	// // prefixes = zend_read_property(psr4_loader_ce_ptr, getThis(), "prefixes", sizeof("prefixes"), 1, &rv);
+    // // zend_read_property
+
+    // array_init(&prefixes);
+    // zend_update_property(psr4_loader_ce_ptr, getThis(), "prefixes", sizeof("prefixes") - 1, &prefixes);
+    // zval_ptr_dtor(&prefixes);
+    
+    // // zend_update_property_ex(psr4_loader_ce_ptr, getThis(), "prefixes", &prefixes);
+
+	// // zend_class_entry *parent = class_type;
+	// // int inherited = 0;
+
+	// intern = zend_object_alloc(sizeof(class_loader_object), psr4_loader_ce_ptr);
+
+	// zend_object_std_init(&intern->std, class_type);
+	// object_properties_init(&intern->std, class_type);
+
+	// // intern->ar_flags = 0;
+	// // intern->ce_get_iterator = spl_ce_ArrayIterator;
+	// // if (orig) {
+	// 	// spl_array_object *other = Z_SPLARRAY_P(orig);
+
+}
+/* }}} */
+
+/* {{{ proto void Psr4Loader::add(string prefix, string|array paths[, bool prepend = false]) : void
+   Register given prefix for autoload lookup in path(s) */
+ZEND_METHOD(Psr4Loader, add)
+{
+    zend_string *prefix;
+	zend_string *path;
+    zend_bool prepend = 0;
+
+	ZEND_PARSE_PARAMETERS_START(2, 3)
+		Z_PARAM_STR(prefix)
+		Z_PARAM_STR(path)
+        Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL(prepend)
+	ZEND_PARSE_PARAMETERS_END();
+
+    // zend_declare_property(argument_definition_ce, "name", sizeof("name")-1, zend_string_init(name, name_len, 0), ZEND_ACC_PROTECTED);
+    // zend_declare_property(argument_definition_ce, "required", sizeof("required")-1, required, ZEND_ACC_PROTECTED);
+}
+/* }}} */
+
+/* {{{ proto void Psr4Loader::set(string prefix, string|array paths[, bool prepend = false]) : void
+   Register and replace given prefix for autoload lookup in path(s) */
+ZEND_METHOD(Psr4Loader, set)
+{
+    zend_string *prefix;
+	zend_string *path;
+    zend_bool prepend = 0;
+
+	ZEND_PARSE_PARAMETERS_START(2, 3)
+		Z_PARAM_STR(prefix)
+		Z_PARAM_STR(path)
+        Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL(prepend)
+	ZEND_PARSE_PARAMETERS_END();
+}
+/* }}} */
+
+/* {{{ proto void Psr4Loader::loadClass(string class) : bool
+   Load given class if exists */
+ZEND_METHOD(Psr4Loader, loadClass)
+{
+	zend_string *class;
+
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_STR(class)
+	ZEND_PARSE_PARAMETERS_END();
+}
+/* }}} */
+
+/* {{{ proto void Psr0Loader::__construct() : string
+   Argument constructor */
+ZEND_METHOD(Psr0Loader, __construct)
+{
+}
+/* }}} */
+
+/* {{{ proto void Psr0Loader::add() : string
+   Retrieve the argument name */
+ZEND_METHOD(Psr0Loader, add)
+{
+    zend_string *prefix;
+	zend_string *path;
+    zend_bool prepend = 0;
+
+	ZEND_PARSE_PARAMETERS_START(2, 3)
+		Z_PARAM_STR(prefix)
+		Z_PARAM_STR(path)
+        Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL(prepend)
+	ZEND_PARSE_PARAMETERS_END();
+}
+/* }}} */
+
+/* {{{ proto void Psr0Loader::set() : bool
+   Check the argument is required */
+ZEND_METHOD(Psr0Loader, set)
+{
+    zend_string *prefix;
+	zend_string *path;
+    zend_bool prepend = 0;
+
+	ZEND_PARSE_PARAMETERS_START(2, 3)
+		Z_PARAM_STR(prefix)
+		Z_PARAM_STR(path)
+        Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL(prepend)
+	ZEND_PARSE_PARAMETERS_END();
+}
+/* }}} */
+
+/* {{{ proto void Psr0Loader::loadClass() : bool
+   Check the argument is required */
+ZEND_METHOD(Psr0Loader, loadClass)
+{
+	zend_string *class;
+
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_STR(class)
+	ZEND_PARSE_PARAMETERS_END();
+}
+/* }}} */
+
+PHP_MINIT_FUNCTION(class_loader)
+{
+    zend_class_entry class_loader_ce;
+    zend_class_entry psr4_loader_ce;
+    zend_class_entry psr0_loader_ce;
+	// ZEND_INIT_MODULE_GLOBALS(class_loader, php_class_loader_init_globals, NULL);
+    
+    zend_function_entry class_loader_methods[] = {
+        PHP_ABSTRACT_ME(ClassLoader, loadClass,    arginfo_class_loader_loadClass)
+        PHP_FE_END
+    };
+    INIT_CLASS_ENTRY(class_loader_ce, "ClassLoader", class_loader_methods);
+    class_loader_ce_ptr = zend_register_internal_interface(&class_loader_ce);
+	// class_loader_ce_ptr->create_object = obj_ctor;
+
+
+    zend_function_entry psr4_loader_methods[] = {
+        PHP_ME(Psr4Loader, __construct, arginfo_psr4_loader___construct, ZEND_ACC_CTOR|ZEND_ACC_PUBLIC)
+        PHP_ME(Psr4Loader, add,         arginfo_psr4_loader_add,         ZEND_ACC_PUBLIC)
+        PHP_ME(Psr4Loader, set,         arginfo_psr4_loader_set,         ZEND_ACC_PUBLIC)
+        PHP_ME(Psr4Loader, loadClass,   arginfo_class_loader_loadClass,  ZEND_ACC_PUBLIC)
+        PHP_FE_END
+    };
+    INIT_CLASS_ENTRY(psr4_loader_ce, "Psr4Loader", psr4_loader_methods);
+	psr4_loader_ce.create_object = cl_object_new;
+    // psr4_loader_ce_ptr = zend_register_internal_class(&psr4_loader_ce);
+    psr4_loader_ce_ptr = zend_register_internal_class_ex(&psr4_loader_ce, NULL);
+    memcpy(&cl_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers)); 
+    cl_object_handlers.offset = XtOffsetOf(cl_obj, std);
+ 
+	// cl_object_handlers.offset = XtOffsetOf(cl_obj, std);
+	// cl_object_handlers.free_obj = date_object_free_storage_date;
+	// cl_object_handlers.clone_obj = date_object_clone_date;
+	// cl_object_handlers.compare_objects = date_object_compare_date;
+	// cl_object_handlers.get_properties = date_object_get_properties;
+	// cl_object_handlers.get_gc = date_object_get_gc;
+    // zend_declare_property_null(psr4_loader_ce_ptr, "prefixes", sizeof("prefixes")-1, ZEND_ACC_PROTECTED);
+    // zend_declare_property_null(psr4_loader_ce_ptr, "prefixes", sizeof("prefixes")-1, ZEND_ACC_PUBLIC);
+    zend_class_implements(psr4_loader_ce_ptr, 1, class_loader_ce_ptr);
+
+    zend_function_entry psr0_loader_methods[] = {
+        PHP_ME(Psr0Loader, __construct, arginfo_psr0_loader___construct, ZEND_ACC_CTOR|ZEND_ACC_PUBLIC)
+        PHP_ME(Psr0Loader, add,         arginfo_psr0_loader_add,         ZEND_ACC_PUBLIC)
+        PHP_ME(Psr0Loader, set,         arginfo_psr0_loader_set,         ZEND_ACC_PUBLIC)
+        PHP_ME(Psr4Loader, loadClass,   arginfo_class_loader_loadClass,  ZEND_ACC_PUBLIC)
+        PHP_FE_END
+    };
+    INIT_CLASS_ENTRY(psr0_loader_ce, "Psr0Loader", psr0_loader_methods);
+    psr0_loader_ce_ptr = zend_register_internal_class(&psr4_loader_ce);
+    zend_declare_property_null(psr0_loader_ce_ptr, "prefixes", sizeof("prefixes")-1, ZEND_ACC_PROTECTED);
+    zend_class_implements(psr0_loader_ce_ptr, 1, class_loader_ce_ptr);
+
+    return SUCCESS;
+}
+
+PHP_RINIT_FUNCTION(class_loader)
+{
+#if defined(COMPILE_DL_CLASS_LOADER) && defined(ZTS)
+    ZEND_TSRMLS_CACHE_UPDATE();
+#endif
+
+    return SUCCESS;
+}
+
+PHP_RSHUTDOWN_FUNCTION(class_loader)
+{
+    return SUCCESS;
+}
+
+PHP_MINFO_FUNCTION(class_loader)
+{
+    php_info_print_table_start();
+    php_info_print_table_row(2, "class_loader support", "enabled");
+    php_info_print_table_row(2, "class_loader version", PHP_CLASS_LOADER_VERSION);
+    php_info_print_table_end();
+}
+
+static const zend_module_dep class_loader_deps[] = {
+    ZEND_MOD_REQUIRED("pcre")
+    ZEND_MOD_END
+};
+
+zend_module_entry class_loader_module_entry = {
+    STANDARD_MODULE_HEADER_EX,
+    NULL,
+    class_loader_deps,
+    "class_loader",
+    NULL,
+    PHP_MINIT(class_loader),
+    NULL,
+    PHP_RINIT(class_loader),
+    PHP_RSHUTDOWN(class_loader),
+    PHP_MINFO(class_loader),
+    PHP_CLASS_LOADER_VERSION,
+    STANDARD_MODULE_PROPERTIES
+};
+
+#ifdef COMPILE_DL_CLASS_LOADER
+#ifdef ZTS
+ZEND_TSRMLS_CACHE_DEFINE();
+#endif
+ZEND_GET_MODULE(class_loader)
+#endif
