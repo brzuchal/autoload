@@ -9,6 +9,7 @@ extern zend_module_entry class_loader_module_entry;
 
 zend_class_entry *class_loader_ce_ptr;
 zend_class_entry *psr4_loader_ce_ptr;
+zend_class_entry *psr0_loader_ce_ptr;
 
 // ClassLoader::loadClass
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_loader_loadClass, 0, 1, _IS_BOOL, NULL)
@@ -20,6 +21,42 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_psr4_loader___construct, 0, 0, 0)
     // ZEND_ARG_TYPE_INFO(0, config, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
+// Psr4Loader::add
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_psr4_loader_add, 0, 2, IS_VOID, NULL)
+    ZEND_ARG_TYPE_INFO(0, prefix, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, prepend, _IS_BOOL, 0)
+ZEND_END_ARG_INFO()
+
+// Psr4Loader::set
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_psr4_loader_set, 0, 2, IS_VOID, NULL)
+    ZEND_ARG_TYPE_INFO(0, prefix, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, prepend, _IS_BOOL, 0)
+ZEND_END_ARG_INFO()
+
+// Psr4Loader::add
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_psr4_loader_getPrefixes, 0, 0, IS_ARRAY, NULL)
+ZEND_END_ARG_INFO()
+
+// Psr0Loader::__construct
+ZEND_BEGIN_ARG_INFO_EX(arginfo_psr0_loader___construct, 0, 0, 0)
+    // ZEND_ARG_TYPE_INFO(0, config, IS_ARRAY, 0)
+ZEND_END_ARG_INFO()
+
+// Psr0Loader::add
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_psr0_loader_add, 0, 2, IS_VOID, NULL)
+    ZEND_ARG_TYPE_INFO(0, prefix, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, prepend, _IS_BOOL, 0)
+ZEND_END_ARG_INFO()
+
+// Psr0Loader::set
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_psr0_loader_set, 0, 2, IS_VOID, NULL)
+    ZEND_ARG_TYPE_INFO(0, prefix, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
+    ZEND_ARG_TYPE_INFO(0, prepend, _IS_BOOL, 0)
+ZEND_END_ARG_INFO()
 
 #define phpext_class_loader_ptr &class_loader_module_entry
 
