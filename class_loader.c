@@ -22,7 +22,6 @@
 #include "php.h"
 #include "class_loader.h"
 #include "Zend/zend_objects_API.h"
-// #include "Zend/zend_types.h"
 
 typedef struct _cl_obj cl_obj;
 struct _cl_obj {
@@ -49,12 +48,6 @@ static zend_object *psr4_loader_new(zend_class_entry *class_type) /* {{{ */
    Argument constructor */
 ZEND_METHOD(Psr4Loader, __construct)
 {
-    printf("\e[0;32mPsr4Loader::__construct()... Yay!\e[0m\n");    
-	// zval *object = getThis();
-	// cl_obj *intern;
-
-	// intern = Z_CLOBJECT_P(object);
-    // intern->std.handlers = &cl_object_handlers;
 }
 /* }}} */
 
@@ -62,10 +55,10 @@ ZEND_METHOD(Psr4Loader, __construct)
    Argument constructor */
 ZEND_METHOD(Psr4Loader, add)
 {
-	zval *object = getThis();
-	cl_obj *intern;
+    zval *object = getThis();
+    cl_obj *intern;
     zend_string *prefix;
-	zend_string *path;
+    zend_string *path;
     zend_bool prepend = 0;
     zval tmp;
 
@@ -81,19 +74,8 @@ ZEND_METHOD(Psr4Loader, add)
         ALLOC_HASHTABLE(intern->prefixes);
         zend_hash_init(intern->prefixes, 2, NULL, NULL, 0);
     }
-    // if (!(tmp = zend_hash_str_find(intern->prefixes, ZSTR_VAL(prefix), ZSTR_LEN(prefix)))) {
-    //     array_init(tmp);
-    // }
-    // add_next_index_str(tmp, path);
     ZVAL_STR(&tmp, path);
     zend_hash_str_update(intern->prefixes, ZSTR_VAL(prefix), ZSTR_LEN(prefix), &tmp);
-    // add_assoc_zval_ex(intern->prefixes, ZSTR_VAL(prefix), ZSTR_LEN(prefix), tmp);
-
-    printf(
-        "\e[0;32mAdded prefix \e[0;33m%s \e[0;32min \e[0;33m%s\e[0m\n", 
-        ZSTR_VAL(prefix), //ZSTR_LEN(prefix), 
-        ZSTR_VAL(path)//, ZSTR_LEN(path)
-    );
 }
 /* }}} */
 
@@ -105,16 +87,11 @@ ZEND_METHOD(Psr4Loader, getPrefixes)
 	cl_obj *intern;
     zend_string *prefix;
 	zval *paths;
-    // zval zval_prefix;
-    // HashTable *prefixes;
 
     array_init(return_value);
     intern = Z_CLOBJECT_P(object);
     if (intern->prefixes) {
         ZEND_HASH_FOREACH_STR_KEY_PTR(intern->prefixes, prefix, paths) {
-            // add_next_index_str(return_value, zend_string_copy(prefix));
-            // ZVAL_STR_COPY(&zval_prefix, prefix);
-            // array_set_zval_key(return_value, &zval_prefix, paths);
             add_assoc_zval_ex(return_value, ZSTR_VAL(prefix), ZSTR_LEN(prefix), paths);
         } ZEND_HASH_FOREACH_END();
 
